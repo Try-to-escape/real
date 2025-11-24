@@ -8,6 +8,8 @@
 #include "afxdialogex.h"
 #include "CPictureDlg.h"
 #include "CFailDlg.h"
+#include "CBookListDlg.h"
+#include "CLightDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -185,13 +187,15 @@ void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	CRect frame(825, 26, 1001, 248);
 
 	if (bookList.PtInRect(point)) {
-		MessageBox(L"책장");
+		CBookListDlg bookListDlg;
+		bookListDlg.DoModal();
 	}
 	else if (laptop.PtInRect(point)) {
 		MessageBox(L"노트북");
 	}
 	else if (light.PtInRect(point)) {
-		MessageBox(L"전등");
+		CLightDlg lightDlg;
+		lightDlg.DoModal();
 	}
 	else if (safe.PtInRect(point)) {
 		MessageBox(L"금고");
@@ -199,7 +203,6 @@ void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	else if (frame.PtInRect(point)) {
 		CPictureDlg picturedlg;
 		picturedlg.DoModal();
-		
 	}
 
 	CDialogEx::OnLButtonDown(nFlags, point);
