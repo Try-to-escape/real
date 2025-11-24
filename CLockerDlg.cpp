@@ -75,7 +75,7 @@ BOOL CLockerDlg::OnInitDialog()
 	m_btnTakeGold.ShowWindow(SW_HIDE);
 
 	//3. 값 초기화
-	m_strPassword = "1572";
+	m_strPassword = "7512";
 	m_bSuccess = false;
 
 	//4. 윈도우 크기 설정

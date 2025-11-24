@@ -28,7 +28,7 @@ void CExplainDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CExplainDlg, CDialogEx)
-
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
