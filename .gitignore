@@ -1,0 +1,74 @@
+# =========================================
+#   Visual Studio + MFC .gitignore
+# =========================================
+
+# --- Build 결과물 ---
+/Debug/
+/Release/
+/x64/
+/ARM/
+/ARM64/
+/bin/
+/obj/
+
+# --- 프로젝트 임시 파일 ---
+*.pch
+*.pdb
+*.idb
+*.obj
+*.ilk
+*.ncb
+*.sdf
+*.cache
+*.tlog
+*.log
+*.tmp
+
+# --- Visual Studio 사용자 설정 파일 (절대 올리면 안됨) ---
+*.VC.db
+*.VC.opendb
+*.user
+*.suo
+*.opendb
+.vs/
+
+# --- 프로젝트 자동 생성 파일 ---
+*.aps     # MFC 리소스 편집기 파일
+*.res     # 리소스 바이너리
+*.manifest
+
+# --- 기타 임시/캐시 ---
+*.ipch
+*.iobj
+*.ipdb
+*.db
+*.pyc
+
+# --- 패키지/라이브러리 ---
+packages/
+*.nuget.props
+*.nuget.targets
+
+# --- Win32/MFC 환경에서 자주 생기는 파일 ---
+*.ilk
+*.exp
+*.lib
+
+# --- CMake 사용 시 ---
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# --- Visual Studio 프로젝트 백업 ---
+*.bak
+*_i.c
+*_p.c
+*.i
+*.ii
+
+# --- Logs ---
+*.log
+
+# --- Crash dump ---
+*.dmp
