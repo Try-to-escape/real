@@ -6,6 +6,7 @@
 #include "framework.h"
 #include "Escape.h"
 #include "EscapeDlg.h"
+#include "CStartDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -71,9 +72,10 @@ BOOL CEscapeApp::InitInstance()
 	// 적절한 내용으로 수정해야 합니다.
 	SetRegistryKey(_T("로컬 애플리케이션 마법사에서 생성된 애플리케이션"));
 
-	CEscapeDlg dlg;
-	m_pMainWnd = &dlg;
-	INT_PTR nResponse = dlg.DoModal();
+	CStartDlg dlgStart;
+	m_pMainWnd = &dlgStart;
+	INT_PTR nResponse = dlgStart.DoModal();
+
 	if (nResponse == IDOK)
 	{
 		// TODO: 여기에 [확인]을 클릭하여 대화 상자가 없어질 때 처리할

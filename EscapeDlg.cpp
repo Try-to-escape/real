@@ -1,5 +1,4 @@
-﻿
-// EscapeDlg.cpp: 구현 파일
+﻿// EscapeDlg.cpp: 구현 파일
 //
 
 #include "pch.h"
@@ -7,30 +6,30 @@
 #include "Escape.h"
 #include "EscapeDlg.h"
 #include "afxdialogex.h"
+#include "CPictureDlg.h"
+#include "CFailDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
-
 class CAboutDlg : public CDialogEx
 {
 public:
 	CAboutDlg();
 
-// 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ABOUTBOX };
 #endif
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
-// 구현입니다.
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	virtual BOOL OnInitDialog();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -47,11 +46,8 @@ END_MESSAGE_MAP()
 
 
 // CEscapeDlg 대화 상자
-
-
-
 CEscapeDlg::CEscapeDlg(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_ESCAPE_DIALOG, pParent)
+	: CDialogEx(IDD_ESCAPE_DIALOG, pParent), m_seconds(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -65,18 +61,44 @@ BEGIN_MESSAGE_MAP(CEscapeDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_MOUSEMOVE()
+	ON_WM_CTLCOLOR()
+	ON_WM_LBUTTONDOWN()
+	ON_BN_CLICKED(IDC_BUTTON_HIDE, &CEscapeDlg::OnBnClickedButtonHide)
+	ON_BN_CLICKED(IDC_BUTTON_OUT, &CEscapeDlg::OnBnClickedButtonOut)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
 // CEscapeDlg 메시지 처리기
-
 BOOL CEscapeDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// 시스템 메뉴에 "정보..." 메뉴 항목을 추가합니다.
+	// 0초로 초기화
+	m_seconds = 0;
 
-	// IDM_ABOUTBOX는 시스템 명령 범위에 있어야 합니다.
+	// 타이머 시작 (1초마다)
+	SetTimer(1, 1000, nullptr);
+
+	// 글꼴 설정
+	m_fontTimer.CreatePointFont(200, _T("굴림"));
+	GetDlgItem(IDC_STATIC_TIMER)->SetFont(&m_fontTimer);
+
+	// 배경 이미지 로드
+	if (FAILED(m_imgBg.Load(L"res/image/EscapeMainPage.bmp")))
+	{
+		AfxMessageBox(L"배경 이미지 로드 실패!");
+	}
+
+	// 다이얼로그 크기 설정
+	int nWidth = 1026;
+	int nHeight = 770;
+	CRect rect(0, 0, nWidth, nHeight);
+	AdjustWindowRect(&rect, GetStyle(), FALSE);
+	SetWindowPos(NULL, 0, 0, rect.Width(), rect.Height(), SWP_NOMOVE | SWP_NOZORDER);
+
+	// 시스템 메뉴 "정보..." 추가
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
@@ -94,14 +116,18 @@ BOOL CEscapeDlg::OnInitDialog()
 		}
 	}
 
-	// 이 대화 상자의 아이콘을 설정합니다.  응용 프로그램의 주 창이 대화 상자가 아닐 경우에는
-	//  프레임워크가 이 작업을 자동으로 수행합니다.
-	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
-	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
+	SetIcon(m_hIcon, TRUE);  // 큰 아이콘
+	SetIcon(m_hIcon, FALSE); // 작은 아이콘
 
-	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	// 마우스 좌표 표시용 static 제일 위로
+	CWnd* pStatic = GetDlgItem(IDC_STATIC);
+	if (pStatic)
+	{
+		pStatic->SetWindowPos(&wndTop, 0, 0, 0, 0,
+			SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+	}
 
-	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
+	return TRUE;
 }
 
 void CEscapeDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -117,27 +143,26 @@ void CEscapeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 }
 
-// 대화 상자에 최소화 단추를 추가할 경우 아이콘을 그리려면
-//  아래 코드가 필요합니다.  문서/뷰 모델을 사용하는 MFC 애플리케이션의 경우에는
-//  프레임워크에서 이 작업을 자동으로 수행합니다.
-
 void CEscapeDlg::OnPaint()
 {
+	CPaintDC dc(this);
+	if (!m_imgBg.IsNull())
+	{
+		CRect rect;
+		GetClientRect(rect);
+		m_imgBg.Draw(dc, rect.left, rect.top, rect.Width(), rect.Height());
+	}
+
 	if (IsIconic())
 	{
-		CPaintDC dc(this); // 그리기를 위한 디바이스 컨텍스트입니다.
-
+		CPaintDC dc(this);
 		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
-
-		// 클라이언트 사각형에서 아이콘을 가운데에 맞춥니다.
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
 		CRect rect;
 		GetClientRect(&rect);
 		int x = (rect.Width() - cxIcon + 1) / 2;
 		int y = (rect.Height() - cyIcon + 1) / 2;
-
-		// 아이콘을 그립니다.
 		dc.DrawIcon(x, y, m_hIcon);
 	}
 	else
@@ -146,10 +171,91 @@ void CEscapeDlg::OnPaint()
 	}
 }
 
-// 사용자가 최소화된 창을 끄는 동안에 커서가 표시되도록 시스템에서
-//  이 함수를 호출합니다.
 HCURSOR CEscapeDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	CRect bookList(0, 0, 448, 241);
+	CRect laptop(60, 302, 339, 479);
+	CRect light(443, 261, 557, 487);
+	CRect safe(337, 655, 517, 746);
+	CRect frame(825, 26, 1001, 248);
+
+	if (bookList.PtInRect(point)) {
+		MessageBox(L"책장");
+	}
+	else if (laptop.PtInRect(point)) {
+		MessageBox(L"노트북");
+	}
+	else if (light.PtInRect(point)) {
+		MessageBox(L"전등");
+	}
+	else if (safe.PtInRect(point)) {
+		MessageBox(L"금고");
+	}
+	else if (frame.PtInRect(point)) {
+		CPictureDlg picturedlg;
+		picturedlg.DoModal();
+		
+	}
+
+	CDialogEx::OnLButtonDown(nFlags, point);
+}
+
+void CEscapeDlg::OnBnClickedButtonHide()
+{
+	m_imgBg.Destroy();
+
+	if (FAILED(m_imgBg.Load(L"res/image/EscapeMainPageHide.bmp")))
+	{
+		AfxMessageBox(L"이미지 로드 실패!");
+		return;
+	}
+
+	Invalidate(TRUE);
+	UpdateWindow();
+}
+
+void CEscapeDlg::OnBnClickedButtonOut()
+{
+	m_imgBg.Destroy();
+
+	if (FAILED(m_imgBg.Load(L"res/image/EscapeMainPage.bmp")))
+	{
+		AfxMessageBox(L"이미지 로드 실패!");
+		return;
+	}
+
+	Invalidate(TRUE);
+	UpdateWindow();
+}
+
+void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	if (nIDEvent == 1)
+	{
+		m_seconds++;
+		int minutes = m_seconds / 60;
+		int seconds = m_seconds % 60;
+
+		CString text;
+		text.Format(L"%02d:%02d", minutes, seconds);
+
+		SetDlgItemText(IDC_STATIC_TIMER, text);
+	}
+
+	CDialogEx::OnTimer(nIDEvent);
+}
+
+
+BOOL CAboutDlg::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	// TODO: 추가 초기화 코드
+
+	return TRUE; // 포커스를 컨트롤에 설정하지 않을 경우 TRUE 반환
+}

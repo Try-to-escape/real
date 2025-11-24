@@ -183,6 +183,10 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CEXPLAIN.h" />
+    <ClInclude Include="CFailDlg.h" />
+    <ClInclude Include="CPictureDlg.h" />
+    <ClInclude Include="CStartDlg.h" />
     <ClInclude Include="Escape.h" />
     <ClInclude Include="EscapeDlg.h" />
     <ClInclude Include="framework.h" />
@@ -191,6 +195,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CEXPLAIN.cpp" />
+    <ClCompile Include="CFailDlg.cpp" />
+    <ClCompile Include="CPictureDlg.cpp" />
+    <ClCompile Include="CStartDlg.cpp" />
     <ClCompile Include="Escape.cpp" />
     <ClCompile Include="EscapeDlg.cpp" />
     <ClCompile Include="pch.cpp">
@@ -204,6 +212,7 @@
     <ResourceCompile Include="Escape.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resource.hm" />
     <None Include="res\Escape.rc2" />
   </ItemGroup>
   <ItemGroup>
