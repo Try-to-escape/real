@@ -10,6 +10,7 @@
 #include "CFailDlg.h"
 #include "CBookListDlg.h"
 #include "CLightDlg.h"
+#include "CLockerDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -198,13 +199,13 @@ void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 		lightDlg.DoModal();
 	}
 	else if (safe.PtInRect(point)) {
-		MessageBox(L"금고");
+		CLockerDlg lockerDlg;
+		lockerDlg.DoModal();
 	}
 	else if (frame.PtInRect(point)) {
 		CPictureDlg picturedlg;
 		picturedlg.DoModal();
 	}
-
 	CDialogEx::OnLButtonDown(nFlags, point);
 }
 
