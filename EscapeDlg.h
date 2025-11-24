@@ -55,7 +55,14 @@ public:
 	bool m_bIsHiddenImage;
 	//숨은 이미지 표지 시작 시간
 	int  m_nHiddenImageTimer;  
+	// 현재 엔딩 이미지 인덱스
+	int  m_nCurrentEndingIndex; 
 	CImage m_imgHint;
 	CImage m_imgEnding[6];
 	CImage* m_pCurrentImage;
+	CButton m_btnHide;
+	CButton m_btnOut;
+	CStatic m_btnTimer;
+	afx_msg void OnBnClickedButtonEnd();
+	CButton m_btnEnd;
 };

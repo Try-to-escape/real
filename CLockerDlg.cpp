@@ -74,8 +74,9 @@ BOOL CLockerDlg::OnInitDialog()
 	m_btnTakeTestpaper.ShowWindow(SW_HIDE);
 	m_btnTakeGold.ShowWindow(SW_HIDE);
 
-	//3. 암호 정답 설정
+	//3. 값 초기화
 	m_strPassword = "1572";
+	m_bSuccess = false;
 
 	//4. 윈도우 크기 설정
 	int nWidth = 1514;
@@ -172,7 +173,7 @@ void CLockerDlg::OnBnClickedButtonTakeTestpaper()
 {
 	//엔딩 출력 변수 활성화
 	AfxMessageBox(_T("시험지를 획득했다!"), MB_OK | MB_ICONINFORMATION);
-	//메인 변수에 엔딩 신호 보내기
+	m_bSuccess = true;
 	EndDialog(IDOK);
 }
 

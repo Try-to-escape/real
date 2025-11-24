@@ -58,6 +58,10 @@ CEscapeDlg::CEscapeDlg(CWnd* pParent /*=nullptr*/)
 void CEscapeDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_BUTTON_HIDE, m_btnHide);
+	DDX_Control(pDX, IDC_BUTTON_OUT, m_btnOut);
+	DDX_Control(pDX, IDC_STATIC_TIMER, m_btnTimer);
+	DDX_Control(pDX, IDC_BUTTON_END, m_btnEnd);
 }
 
 BEGIN_MESSAGE_MAP(CEscapeDlg, CDialogEx)
@@ -70,6 +74,7 @@ BEGIN_MESSAGE_MAP(CEscapeDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_HIDE, &CEscapeDlg::OnBnClickedButtonHide)
 	ON_BN_CLICKED(IDC_BUTTON_OUT, &CEscapeDlg::OnBnClickedButtonOut)
 	ON_WM_TIMER()
+	ON_BN_CLICKED(IDC_BUTTON_END, &CEscapeDlg::OnBnClickedButtonEnd)
 END_MESSAGE_MAP()
 
 
@@ -78,13 +83,16 @@ BOOL CEscapeDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// 0초로 초기화
+	// 값 초기화
 	m_seconds = 0;
 	m_bHideRequested = FALSE;
 	m_bHideTimer = FALSE;
 	m_nHideSecond = 0;
 	m_bIsHiddenImage = FALSE;
 	m_nHiddenImageTimer = 0;
+
+	//컨트롤 설정
+	m_btnEnd.ShowWindow(SW_HIDE);
 
 	// 타이머 시작 (1초마다)
 	SetTimer(1, 1000, nullptr);
@@ -99,6 +107,7 @@ BOOL CEscapeDlg::OnInitDialog()
 		AfxMessageBox(L"배경 이미지 로드 실패!");
 	}
 	m_pCurrentImage = &m_imgBg;
+
 
 	//가람파트 이미지 불러오기
 	m_imgHint.Load(L"res/image/EscapeMainPageHint.bmp");
@@ -214,6 +223,22 @@ void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	else if (safe.PtInRect(point)) {
 		CLockerDlg lockerDlg;
 		lockerDlg.DoModal();
+
+		//엔딩
+		if (lockerDlg.m_bSuccess)
+		{
+			AfxMessageBox(_T("시험지를 획득했다! 이제 시험은 100점이다!"), MB_OK | MB_ICONINFORMATION);
+			//버튼들 숨기기
+			m_btnHide.ShowWindow(SW_HIDE);
+			m_btnOut.ShowWindow(SW_HIDE);
+			m_btnTimer.ShowWindow(SW_HIDE);
+			//엔딩 이미지 시작
+			m_nCurrentEndingIndex = 0;
+			m_pCurrentImage = &m_imgEnding[m_nCurrentEndingIndex];
+			Invalidate();
+
+			SetTimer(2, 5000, nullptr);
+		}
 	}
 	else if (frame.PtInRect(point)) {
 		CPictureDlg picturedlg;
@@ -325,6 +350,27 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 
 		SetDlgItemText(IDC_STATIC_TIMER, text);
 	}
+	else if (nIDEvent == 2)
+	{
+		KillTimer(1);
+		
+		m_nCurrentEndingIndex++;
+
+		//이미지 변화
+		if (m_nCurrentEndingIndex < 6)
+		{
+			m_pCurrentImage = &m_imgEnding[m_nCurrentEndingIndex];
+			Invalidate(TRUE);
+		}
+		//이미지 출력 끝
+		else
+		{	
+			KillTimer(2);
+			m_btnEnd.ShowWindow(SW_SHOW);
+				
+		}
+	}
+
 
 	CDialogEx::OnTimer(nIDEvent);
 }
@@ -337,4 +383,9 @@ BOOL CAboutDlg::OnInitDialog()
 	// TODO: 추가 초기화 코드
 
 	return TRUE; // 포커스를 컨트롤에 설정하지 않을 경우 TRUE 반환
+}
+
+void CEscapeDlg::OnBnClickedButtonEnd()
+{
+	::PostQuitMessage(0);
 }

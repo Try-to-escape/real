@@ -48,6 +48,6 @@ public:
 	CString m_strPassword;
 	afx_msg void OnBnClickedButtonTakeTestpaper();
 	afx_msg void OnLockerButton();
-
 	afx_msg void OnBnClickedButtonTakeGold();
+	bool m_bSuccess;
 };
