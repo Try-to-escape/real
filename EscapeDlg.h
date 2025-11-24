@@ -43,7 +43,19 @@ public:
 	int m_seconds;
 	CFont m_fontTimer;
 
+	//120초 후 최초 띄우기용
 	int m_prevSecond;
+	//숨기버튼 클릭 여부
+	bool m_bHideRequested;
+	//숨은 시각
 	int m_nHideSecond;
+	//숨은 후 타이머 시작
 	bool m_bHideTimer;
+	//숨은 이미지 표지 타이머 시작
+	bool m_bIsHiddenImage;
+	//숨은 이미지 표지 시작 시간
+	int  m_nHiddenImageTimer;  
+	CImage m_imgHint;
+	CImage m_imgEnding[6];
+	CImage* m_pCurrentImage;
 };

@@ -80,8 +80,11 @@ BOOL CEscapeDlg::OnInitDialog()
 
 	// 0초로 초기화
 	m_seconds = 0;
+	m_bHideRequested = FALSE;
 	m_bHideTimer = FALSE;
 	m_nHideSecond = 0;
+	m_bIsHiddenImage = FALSE;
+	m_nHiddenImageTimer = 0;
 
 	// 타이머 시작 (1초마다)
 	SetTimer(1, 1000, nullptr);
@@ -95,6 +98,7 @@ BOOL CEscapeDlg::OnInitDialog()
 	{
 		AfxMessageBox(L"배경 이미지 로드 실패!");
 	}
+	m_pCurrentImage = &m_imgBg;
 
 	//가람파트 이미지 불러오기
 	m_imgHint.Load(L"res/image/EscapeMainPageHint.bmp");
@@ -160,11 +164,9 @@ void CEscapeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 void CEscapeDlg::OnPaint()
 {
 	CPaintDC dc(this);
-	if (!m_imgBg.IsNull())
+	if (m_pCurrentImage && !m_pCurrentImage->IsNull())
 	{
-		CRect rect;
-		GetClientRect(rect);
-		m_imgBg.Draw(dc, rect.left, rect.top, rect.Width(), rect.Height());
+		m_pCurrentImage->Draw(dc, 0, 0);
 	}
 
 	if (IsIconic())
@@ -234,10 +236,8 @@ void CEscapeDlg::OnBnClickedButtonHide()
 	UpdateWindow();
 
 	if (m_bHideTimer) {
-		m_bHideTimer = FALSE;
+		m_bHideRequested = TRUE;
 	}
-
-
 }
 
 void CEscapeDlg::OnBnClickedButtonOut()
@@ -252,6 +252,15 @@ void CEscapeDlg::OnBnClickedButtonOut()
 
 	Invalidate(TRUE);
 	UpdateWindow();
+
+	//교수님이 나가지 않았는데 나가기 버튼을 누른 경우
+	if (m_bHideTimer || m_bIsHiddenImage ) {
+		m_bHideTimer = FALSE;
+		m_bIsHiddenImage = FALSE;
+		AfxMessageBox(_T("교수님께 들켜버렸다!"), MB_OK | MB_ICONERROR);
+		CFailDlg failDlg;
+		failDlg.DoModal();
+	}
 }
 
 void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
@@ -262,7 +271,7 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		int minutes = m_seconds / 60;
 		int seconds = m_seconds % 60;
 
-		//1. 5분이 지난 경우
+		//1. 5분이 지난 경우 -> 자동 실패 엔딩
 		if (m_seconds > 300) {
 			AfxMessageBox(_T("교수님이 커피를 사고 돌아오셨다..."), MB_OK | MB_ICONWARNING);
 			CFailDlg picturedlg;
@@ -270,7 +279,7 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 
 		//2. 교수님이 지갑을 가지러 다시 오신 경우
-		if (m_prevSecond <= 5 && m_seconds > 5) {
+		if (m_prevSecond <= 120 && m_seconds > 120) {
 			m_prevSecond = m_seconds;
 			AfxMessageBox(_T("저벅저벅..."), MB_OK | MB_ICONWARNING);
 			AfxMessageBox(_T("'하하하 지갑을 놔두고 와버렸네~~'하는 소리가 복도에서 희미하게 들린다"), MB_OK | MB_ICONWARNING);
@@ -279,13 +288,36 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 			m_nHideSecond = m_seconds;
 		}
 
-		//3. 교수님이 오셨는데 5초안에 숨지 않은 경우
+		//3. 교수님이 오신 후 5초가 지남
 		if (m_bHideTimer && (m_seconds - m_nHideSecond >= 5))
 		{
+			
 			m_bHideTimer = FALSE;
-			AfxMessageBox(_T("교수님께 들켜버렸다!"), MB_OK | MB_ICONERROR);
-			CFailDlg failDlg;
-			failDlg.DoModal();
+			//1) 5초안에 숨기 버튼을 누름-> 힌트 이미지
+			if (m_bHideRequested)
+			{
+				m_bHideRequested = FALSE;
+				m_bIsHiddenImage = TRUE;
+				m_nHiddenImageTimer = m_seconds;
+				m_pCurrentImage = &m_imgHint;
+				Invalidate();
+
+			}
+			//2) 5초안에 숨기 버튼을 안누름 -> 실패 엔딩
+			else {
+				AfxMessageBox(_T("교수님께 들켜버렸다!"), MB_OK | MB_ICONERROR);
+				CFailDlg failDlg;
+				failDlg.DoModal();
+			}
+		}
+
+		//4. 숨은 상태로 5초가 지나면 원래 이미지로 복원
+		if (m_bIsHiddenImage && (m_seconds - m_nHiddenImageTimer >= 5))
+		{
+			m_bIsHiddenImage = FALSE;
+			m_pCurrentImage = &m_imgBg;
+			Invalidate(TRUE);
+			AfxMessageBox(_T("교수님이 다시 나가셨다...계속 방을 둘러보자"), MB_OK | MB_ICONINFORMATION);
 		}
 
 		CString text;
