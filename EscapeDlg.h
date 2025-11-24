@@ -43,4 +43,7 @@ public:
 	int m_seconds;
 	CFont m_fontTimer;
 
+	int m_prevSecond;
+	int m_nHideSecond;
+	bool m_bHideTimer;
 };

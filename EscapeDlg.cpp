@@ -80,6 +80,8 @@ BOOL CEscapeDlg::OnInitDialog()
 
 	// 0초로 초기화
 	m_seconds = 0;
+	m_bHideTimer = FALSE;
+	m_nHideSecond = 0;
 
 	// 타이머 시작 (1초마다)
 	SetTimer(1, 1000, nullptr);
@@ -93,6 +95,15 @@ BOOL CEscapeDlg::OnInitDialog()
 	{
 		AfxMessageBox(L"배경 이미지 로드 실패!");
 	}
+
+	//가람파트 이미지 불러오기
+	m_imgHint.Load(L"res/image/EscapeMainPageHint.bmp");
+	m_imgEnding[0].Load(L"res/image/EscapeEnding1.bmp");
+	m_imgEnding[1].Load(L"res/image/EscapeEnding2.bmp");
+	m_imgEnding[2].Load(L"res/image/EscapeEnding3.bmp");
+	m_imgEnding[3].Load(L"res/image/EscapeEnding4.bmp");
+	m_imgEnding[4].Load(L"res/image/EscapeEnding5.bmp");
+	m_imgEnding[5].Load(L"res/image/EscapeEnding6.bmp");
 
 	// 다이얼로그 크기 설정
 	int nWidth = 1026;
@@ -221,6 +232,12 @@ void CEscapeDlg::OnBnClickedButtonHide()
 
 	Invalidate(TRUE);
 	UpdateWindow();
+
+	if (m_bHideTimer) {
+		m_bHideTimer = FALSE;
+	}
+
+
 }
 
 void CEscapeDlg::OnBnClickedButtonOut()
@@ -244,6 +261,32 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		m_seconds++;
 		int minutes = m_seconds / 60;
 		int seconds = m_seconds % 60;
+
+		//1. 5분이 지난 경우
+		if (m_seconds > 300) {
+			AfxMessageBox(_T("교수님이 커피를 사고 돌아오셨다..."), MB_OK | MB_ICONWARNING);
+			CFailDlg picturedlg;
+			picturedlg.DoModal();
+		}
+
+		//2. 교수님이 지갑을 가지러 다시 오신 경우
+		if (m_prevSecond <= 5 && m_seconds > 5) {
+			m_prevSecond = m_seconds;
+			AfxMessageBox(_T("저벅저벅..."), MB_OK | MB_ICONWARNING);
+			AfxMessageBox(_T("'하하하 지갑을 놔두고 와버렸네~~'하는 소리가 복도에서 희미하게 들린다"), MB_OK | MB_ICONWARNING);
+			//대화상자 확인 버튼 누른 시점으로부터 5초 계산
+			m_bHideTimer = TRUE;
+			m_nHideSecond = m_seconds;
+		}
+
+		//3. 교수님이 오셨는데 5초안에 숨지 않은 경우
+		if (m_bHideTimer && (m_seconds - m_nHideSecond >= 5))
+		{
+			m_bHideTimer = FALSE;
+			AfxMessageBox(_T("교수님께 들켜버렸다!"), MB_OK | MB_ICONERROR);
+			CFailDlg failDlg;
+			failDlg.DoModal();
+		}
 
 		CString text;
 		text.Format(L"%02d:%02d", minutes, seconds);
