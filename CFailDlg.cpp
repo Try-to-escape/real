@@ -56,8 +56,8 @@ BOOL CFailDlg::OnInitDialog()
 
 
 	//버튼 컨트롤 좌표
-	m_btnExit.SetWindowPos(NULL, 730, 470, 185, 70, SWP_NOZORDER);
-	m_btnRetry.SetWindowPos(NULL, 730, 850, 185, 70, SWP_NOZORDER);
+	m_btnExit.SetWindowPos(NULL, 730, 520, 185, 70, SWP_NOZORDER);
+	m_btnRetry.SetWindowPos(NULL, 730, 620, 185, 70, SWP_NOZORDER);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }
