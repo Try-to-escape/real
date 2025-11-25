@@ -60,6 +60,7 @@ BOOL CLightDlg::OnInitDialog()
 
 	SetWindowPos(NULL, 0, 0, rect.Width(), rect.Height(), SWP_NOMOVE | SWP_NOZORDER);
 
+	m_btnLight.SetWindowPos(NULL, 860, 490, 80, 40, SWP_NOZORDER);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }
