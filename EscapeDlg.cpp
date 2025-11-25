@@ -355,6 +355,7 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		//2. 교수님이 지갑을 가지러 다시 오신 경우
 		if (m_prevSecond <= 120 && m_seconds > 120) {
 			m_prevSecond = m_seconds;
+			CloseAllModelessChildDialogs();
 			m_pCurrentImage = &m_imgProfessorComing;
 			Invalidate();
 			AfxMessageBox(_T("교수님이 5초안에 방으로 들어오실거같다"), MB_OK | MB_ICONWARNING);
@@ -442,11 +443,13 @@ BOOL CAboutDlg::OnInitDialog()
 	return TRUE; // 포커스를 컨트롤에 설정하지 않을 경우 TRUE 반환
 }
 
+//엔딩 후 종료 버튼
 void CEscapeDlg::OnBnClickedButtonEnd()
 {
 	::PostQuitMessage(0);
 }
 
+//성공 호출 함수
 LRESULT CEscapeDlg::OnLockerSuccess(WPARAM wParam, LPARAM lParam)
 {
 	// 엔딩 시작
@@ -460,3 +463,32 @@ LRESULT CEscapeDlg::OnLockerSuccess(WPARAM wParam, LPARAM lParam)
 	SetTimer(2, 5000, nullptr);
 	return 0;
 }
+
+//자식모달리스창 제거 함수
+// CEscapeDlg의 모든 자식 모달리스 다이얼로그 닫기
+void CEscapeDlg::CloseAllModelessChildDialogs()
+{
+	EnumChildWindows(this->m_hWnd, [](HWND hWnd, LPARAM lParam) -> BOOL
+		{
+			// CWnd 포인터로 변환
+			CWnd* pWnd = CWnd::FromHandle(hWnd);
+			if (pWnd)
+			{
+				CString className;
+				::GetClassName(hWnd, className.GetBuffer(256), 256);
+				className.ReleaseBuffer();
+
+				// 디버깅용 로그 (필요하면)
+				// TRACE(L"Child Class: %s\n", className);
+
+				// 닫을 대상: 자식 다이얼로그만
+				if (pWnd->IsKindOf(RUNTIME_CLASS(CDialogEx)) && pWnd != CWnd::FromHandle(lParam))
+				{
+					// 강제로 창 닫기 (모달리스는 이 방법이 안전)
+					pWnd->SendMessage(WM_CLOSE);
+				}
+			}
+			return TRUE;
+		}, (LPARAM)this);
+}
+

@@ -26,10 +26,12 @@ protected:
 
 	// 생성된 메시지 맵 함수
 	virtual BOOL OnInitDialog();
+	virtual void DoDataExchange(CDataExchange* pDX);
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg LRESULT OnLockerSuccess(WPARAM wParam, LPARAM lParam);
+
 	DECLARE_MESSAGE_MAP()
 
 	CImage m_imgBg;
@@ -41,6 +43,7 @@ public:
 	afx_msg void OnBnClickedButtonOut();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnBnClickedButtonEnd();
+	void CloseAllModelessChildDialogs();
 	int m_seconds;
 	CFont m_fontTimer;
 
