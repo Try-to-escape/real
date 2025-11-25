@@ -60,13 +60,14 @@ BOOL CFailDlg::OnInitDialog()
 void CFailDlg::OnClickedRetryButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	CWnd* pMain = AfxGetMainWnd();
-	if (pMain && pMain != this) {
-		pMain->PostMessageW(WM_CLOSE);
-	}
-	CStartDlg startDlg;
-	startDlg.DoModal();
-	DestroyWindow();
+	wchar_t szPath[MAX_PATH];
+	GetModuleFileName(NULL, szPath, MAX_PATH);
+
+	// 새 인스턴스 실행
+	ShellExecute(NULL, L"open", szPath, NULL, NULL, SW_SHOW);
+
+	// 현재 프로세스 종료
+	::ExitProcess(0);
 }
 
 void CFailDlg::OnClickedExitButton()
