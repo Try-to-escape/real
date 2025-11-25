@@ -88,6 +88,20 @@ BOOL CLockerDlg::OnInitDialog()
 
 	Invalidate();
 
+	//5. 버튼 좌표 설정
+	m_btnLocker1.SetWindowPos(NULL, 252, 240, 80, 80, SWP_NOZORDER);
+	m_btnLocker2.SetWindowPos(NULL, 350, 240, 80, 80, SWP_NOZORDER);
+	m_btnLocker3.SetWindowPos(NULL, 441, 240, 80, 80, SWP_NOZORDER);
+	m_btnLocker4.SetWindowPos(NULL, 252, 330, 80, 80, SWP_NOZORDER);
+	m_btnLocker5.SetWindowPos(NULL, 350, 330, 80, 80, SWP_NOZORDER);
+	m_btnLocker6.SetWindowPos(NULL, 441, 330, 80, 80, SWP_NOZORDER);
+	m_btnLocker7.SetWindowPos(NULL, 252, 420, 80, 80, SWP_NOZORDER);
+	m_btnLocker8.SetWindowPos(NULL, 350, 420, 80, 80, SWP_NOZORDER);
+	m_btnLocker9.SetWindowPos(NULL, 441, 420, 80, 80, SWP_NOZORDER);
+	m_btnLocker0.SetWindowPos(NULL, 350, 510, 80, 80, SWP_NOZORDER);
+	m_editLockerInput.SetWindowPos(NULL, 630, 530, 270, 55, SWP_NOZORDER);
+	m_btnTakeTestpaper.SetWindowPos(NULL, 300, 600, 360, 80, SWP_NOZORDER);
+	m_btnTakeGold.SetWindowPos(NULL, 930, 600, 360, 80, SWP_NOZORDER);
 	return TRUE;
 }
 
