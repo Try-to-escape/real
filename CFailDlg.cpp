@@ -25,6 +25,8 @@ CFailDlg::~CFailDlg()
 void CFailDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_EXIT_BUTTON, m_btnExit);
+	DDX_Control(pDX, IDC_RETRY_BUTTON, m_btnRetry);
 }
 
 
@@ -52,6 +54,10 @@ BOOL CFailDlg::OnInitDialog()
 
 	SetWindowPos(NULL, 0, 0, rect.Width(), rect.Height(), SWP_NOMOVE | SWP_NOZORDER);
 
+
+	//버튼 컨트롤 좌표
+	m_btnExit.SetWindowPos(NULL, 730, 470, 185, 70, SWP_NOZORDER);
+	m_btnRetry.SetWindowPos(NULL, 730, 850, 185, 70, SWP_NOZORDER);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }
