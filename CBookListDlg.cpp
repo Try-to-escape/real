@@ -81,6 +81,9 @@ BOOL CBookListDlg::OnInitDialog()
 	m_btnWBook.m_bTransparent = TRUE;
 	m_btnWBook.m_bDrawFocus = FALSE;
 	m_btnWBook.SetMouseCursorHand();
+
+	m_btnFBook.SetWindowPos(NULL, 373, 48, 50, 270, SWP_NOZORDER);
+	m_btnWBook.SetWindowPos(NULL, 582, 29, 50, 296, SWP_NOZORDER);
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.

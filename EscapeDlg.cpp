@@ -95,9 +95,10 @@ BOOL CEscapeDlg::OnInitDialog()
 
 	//컨트롤 설정
 	m_btnEnd.ShowWindow(SW_HIDE);
-	m_btnHide.MoveWindow(65, 647, 100, 40);
-	m_btnOut.MoveWindow(70, 647, 100, 40);
-	m_btnEnd.MoveWindow(826, 654, 100, 40);
+	m_btnHide.SetWindowPos(NULL, 65, 647, 100, 40, SWP_NOZORDER);
+	m_btnOut.SetWindowPos(NULL, 180, 647, 100, 40, SWP_NOZORDER);
+	m_btnEnd.SetWindowPos(NULL,826, 654, 100, 40, SWP_NOZORDER);
+	m_btnTimer.SetWindowPos(NULL, 826, 654, 100, 40, SWP_NOZORDER);
 
 	// 타이머 시작 (1초마다)
 	SetTimer(1, 1000, nullptr);
