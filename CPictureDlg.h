@@ -37,5 +37,9 @@ public:
 	
 	afx_msg void OnClickedButtonSubmit();
 	afx_msg void OnPaint();
+	CButton m_btnSubmit;
+	CButton m_btnFail1;
+	CButton m_btnFail2;
+	CButton m_btnSuccess;
 };
 //여기서 작업하셈

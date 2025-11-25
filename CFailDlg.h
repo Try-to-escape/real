@@ -29,4 +29,6 @@ public:
 	afx_msg void OnClickedRetryButton();
 	afx_msg void OnClickedExitButton();
 	afx_msg void OnPaint();
+	CButton m_btnExit;
+	CButton m_btnRetry;
 };

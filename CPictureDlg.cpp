@@ -25,6 +25,10 @@ CPictureDlg::~CPictureDlg()
 void CPictureDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_BUTTON_SUBMIT, m_btnSubmit);
+	DDX_Control(pDX, IDC_RADIO_FAIL1, m_btnFail1);
+	DDX_Control(pDX, IDC_RADIO_FAIL2, m_btnFail2);
+	DDX_Control(pDX, IDC_RADIO_SUCCESS, m_btnSuccess);
 }
 
 
@@ -61,6 +65,13 @@ BOOL CPictureDlg::OnInitDialog()
 
 	SetWindowPos(NULL, 0, 0, rect.Width(), rect.Height(), SWP_NOMOVE | SWP_NOZORDER);
 	Invalidate();
+
+	//버튼 좌표 지정
+	m_btnSubmit.SetWindowPos(NULL, 370, 670, 277, 70, SWP_NOZORDER);
+	m_btnFail1.SetWindowPos(NULL, 150, 600, 30, 30, SWP_NOZORDER);
+	m_btnFail2.SetWindowPos(NULL, 490, 600, 30, 30, SWP_NOZORDER);
+	m_btnSuccess.SetWindowPos(NULL, 830, 600, 30, 30, SWP_NOZORDER);
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }
