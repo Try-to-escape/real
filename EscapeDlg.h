@@ -18,8 +18,7 @@ public:
 #endif
 
 	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
-
+	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.       
 
 // 구현입니다.
 protected:
@@ -30,6 +29,7 @@ protected:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+	afx_msg LRESULT OnLockerSuccess(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 
 	CImage m_imgBg;
@@ -40,6 +40,7 @@ public:
 	afx_msg void OnBnClickedButtonHide();
 	afx_msg void OnBnClickedButtonOut();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnBnClickedButtonEnd();
 	int m_seconds;
 	CFont m_fontTimer;
 
@@ -63,6 +64,6 @@ public:
 	CButton m_btnHide;
 	CButton m_btnOut;
 	CStatic m_btnTimer;
-	afx_msg void OnBnClickedButtonEnd();
 	CButton m_btnEnd;
+	CImage m_imgProfessorComing;
 };

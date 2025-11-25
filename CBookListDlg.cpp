@@ -108,3 +108,18 @@ void CBookListDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
 	}
 	CDialogEx::OnDrawItem(nIDCtl, lpDrawItemStruct);
 }
+
+void CBookListDlg::OnCancel()
+{
+	DestroyWindow();  
+}
+
+void CBookListDlg::OnOK()
+{
+	DestroyWindow();  
+}
+
+void CBookListDlg::PostNcDestroy()
+{
+	delete this;  
+}

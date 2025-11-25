@@ -88,7 +88,7 @@ void CPictureDlg::OnClickedRadioFail2()
 void CPictureDlg::OnClickedButtonSubmit()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	CFailDlg failDlg;
+	CFailDlg* pFailDlg = new CFailDlg;
 	switch (m_selectedPictureRadio) {
 	case 1:
 		m_bmpPictureCurrent = &m_bmpPicture1;
@@ -96,12 +96,26 @@ void CPictureDlg::OnClickedButtonSubmit()
 	case 2:
 		
 		m_bmpPictureCurrent = &m_bmpPicture2;
-		failDlg.DoModal();
+		if (pFailDlg->Create(IDD_FAIL_DIALOG, this))
+		{
+			pFailDlg->ShowWindow(SW_SHOW);
+		}
+		else
+		{
+			delete pFailDlg;
+		}
 		break;
 	case 3:
 		
 		m_bmpPictureCurrent = &m_bmpPicture3;
-		failDlg.DoModal();
+		if (pFailDlg->Create(IDD_FAIL_DIALOG, this))
+		{
+			pFailDlg->ShowWindow(SW_SHOW);
+		}
+		else
+		{
+			delete pFailDlg;
+		}
 
 		break;
 	}
@@ -127,4 +141,19 @@ void CPictureDlg::OnPaint()
 		GetClientRect(rect);
 		m_bmpPictureCurrent->Draw(dc, rect.left, rect.top, rect.Width(), rect.Height());
 	}
+}
+
+void CPictureDlg::OnCancel()
+{
+	DestroyWindow();  
+}
+
+void CPictureDlg::OnOK()
+{
+	DestroyWindow();  
+}
+
+void CPictureDlg::PostNcDestroy()
+{
+	delete this;  
 }

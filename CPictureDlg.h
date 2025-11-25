@@ -19,7 +19,9 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
-
+	virtual void PostNcDestroy();
+	virtual void OnCancel();
+	virtual void OnOK();
 	DECLARE_MESSAGE_MAP()
 public:
 	CImage m_bmpPicture;

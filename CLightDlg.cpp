@@ -104,3 +104,18 @@ void CLightDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
 	}
 	CDialogEx::OnDrawItem(nIDCtl, lpDrawItemStruct);
 }
+
+void CLightDlg::OnCancel()
+{
+	DestroyWindow();
+}
+
+void CLightDlg::OnOK()
+{
+	DestroyWindow();
+}
+
+void CLightDlg::PostNcDestroy()
+{
+	delete this;
+}

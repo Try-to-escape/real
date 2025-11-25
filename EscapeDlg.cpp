@@ -75,7 +75,9 @@ BEGIN_MESSAGE_MAP(CEscapeDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_OUT, &CEscapeDlg::OnBnClickedButtonOut)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_BUTTON_END, &CEscapeDlg::OnBnClickedButtonEnd)
+	ON_MESSAGE(WM_USER + 1, &CEscapeDlg::OnLockerSuccess)
 END_MESSAGE_MAP()
+
 
 
 // CEscapeDlg 메시지 처리기
@@ -211,39 +213,67 @@ void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	CRect frame(825, 26, 1001, 248);
 
 	if (bookList.PtInRect(point)) {
-		CBookListDlg bookListDlg;
-		bookListDlg.DoModal();
+		CBookListDlg* pBookListDlg = new CBookListDlg;
+		if (pBookListDlg->Create(IDD_DIALOG_BOOKLIST, this))
+		{
+			pBookListDlg->ShowWindow(SW_SHOW);
+		}
+		else
+		{
+			delete pBookListDlg;
+		}
 	}
 	else if (laptop.PtInRect(point)) {
 		MessageBox(L"노트북이 잠겨있다...");
 	}
 	else if (light.PtInRect(point)) {
-		CLightDlg lightDlg;
-		lightDlg.DoModal();
-	}
-	else if (safe.PtInRect(point)) {
-		CLockerDlg lockerDlg;
-		lockerDlg.DoModal();
-
-		//엔딩
-		if (lockerDlg.m_bSuccess)
+		CLightDlg* pLightDlg = new CLightDlg;
+		if (pLightDlg->Create(IDD_DIALOG_LIGHT, this))
 		{
-			AfxMessageBox(_T("시험지를 획득했다! 이제 시험은 100점이다!"), MB_OK | MB_ICONINFORMATION);
-			//버튼들 숨기기
-			m_btnHide.ShowWindow(SW_HIDE);
-			m_btnOut.ShowWindow(SW_HIDE);
-			m_btnTimer.ShowWindow(SW_HIDE);
-			//엔딩 이미지 시작
-			m_nCurrentEndingIndex = 0;
-			m_pCurrentImage = &m_imgEnding[m_nCurrentEndingIndex];
-			Invalidate();
-
-			SetTimer(2, 5000, nullptr);
+			pLightDlg->ShowWindow(SW_SHOW);
+		}
+		else
+		{
+			delete pLightDlg;
 		}
 	}
+	else if (safe.PtInRect(point)) {
+		CLockerDlg* pLockerDlg = new CLockerDlg;
+		if (pLockerDlg->Create(IDD_DIALOG_LOCKER, this))
+		{
+			pLockerDlg->ShowWindow(SW_SHOW);
+		}
+		else
+		{
+			delete pLockerDlg;
+		}
+	}
+
+		////엔딩
+		//if (lockerDlg.m_bSuccess)
+		//{
+		//	AfxMessageBox(_T("시험지를 획득했다! 이제 시험은 100점이다!"), MB_OK | MB_ICONINFORMATION);
+		//	//버튼들 숨기기
+		//	m_btnHide.ShowWindow(SW_HIDE);
+		//	m_btnOut.ShowWindow(SW_HIDE);
+		//	m_btnTimer.ShowWindow(SW_HIDE);
+		//	//엔딩 이미지 시작
+		//	m_nCurrentEndingIndex = 0;
+		//	m_pCurrentImage = &m_imgEnding[m_nCurrentEndingIndex];
+		//	Invalidate();
+
+		//	SetTimer(2, 5000, nullptr);
+		//}
 	else if (frame.PtInRect(point)) {
-		CPictureDlg picturedlg;
-		picturedlg.DoModal();
+		CPictureDlg* pPictureDlg = new CPictureDlg;
+		if (pPictureDlg->Create(IDD_PICTURE_DIALOG, this))
+		{
+			pPictureDlg->ShowWindow(SW_SHOW);
+		}
+		else
+		{
+			delete pPictureDlg;
+		}
 	}
 	CDialogEx::OnLButtonDown(nFlags, point);
 }
@@ -284,8 +314,15 @@ void CEscapeDlg::OnBnClickedButtonOut()
 		m_bHideTimer = FALSE;
 		m_bIsHiddenImage = FALSE;
 		AfxMessageBox(_T("교수님께 들켜버렸다!"), MB_OK | MB_ICONERROR);
-		CFailDlg failDlg;
-		failDlg.DoModal();
+		CFailDlg* pFailDlg = new CFailDlg;
+		if (pFailDlg->Create(IDD_FAIL_DIALOG, this))
+		{
+			pFailDlg->ShowWindow(SW_SHOW);
+		}
+		else
+		{
+			delete pFailDlg;
+		}
 	}
 }
 
@@ -300,8 +337,15 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		//1. 5분이 지난 경우 -> 자동 실패 엔딩
 		if (m_seconds > 300) {
 			AfxMessageBox(_T("교수님이 커피를 사고 돌아오셨다..."), MB_OK | MB_ICONWARNING);
-			CFailDlg picturedlg;
-			picturedlg.DoModal();
+			CFailDlg* pFailDlg = new CFailDlg;
+			if (pFailDlg->Create(IDD_FAIL_DIALOG, this))
+			{
+				pFailDlg->ShowWindow(SW_SHOW);
+			}
+			else
+			{
+				delete pFailDlg;
+			}
 		}
 
 		//2. 교수님이 지갑을 가지러 다시 오신 경우
@@ -333,8 +377,15 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 			//2) 5초안에 숨기 버튼을 안누름 -> 실패 엔딩
 			else {
 				AfxMessageBox(_T("교수님께 들켜버렸다!"), MB_OK | MB_ICONERROR);
-				CFailDlg failDlg;
-				failDlg.DoModal();
+				CFailDlg* pFailDlg = new CFailDlg;
+				if (pFailDlg->Create(IDD_FAIL_DIALOG, this))
+				{
+					pFailDlg->ShowWindow(SW_SHOW);
+				}
+				else
+				{
+					delete pFailDlg;
+				}
 			}
 		}
 
@@ -390,4 +441,18 @@ BOOL CAboutDlg::OnInitDialog()
 void CEscapeDlg::OnBnClickedButtonEnd()
 {
 	::PostQuitMessage(0);
+}
+
+LRESULT CEscapeDlg::OnLockerSuccess(WPARAM wParam, LPARAM lParam)
+{
+	// 엔딩 시작
+	AfxMessageBox(_T("시험지를 획득했다! 이제 시험은 100점이다!"));
+	m_btnHide.ShowWindow(SW_HIDE);
+	m_btnOut.ShowWindow(SW_HIDE);
+	m_btnTimer.ShowWindow(SW_HIDE);
+	m_nCurrentEndingIndex = 0;
+	m_pCurrentImage = &m_imgEnding[m_nCurrentEndingIndex];
+	Invalidate();
+	SetTimer(2, 5000, nullptr);
+	return 0;
 }

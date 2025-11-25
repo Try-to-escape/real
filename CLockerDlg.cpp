@@ -159,7 +159,7 @@ void CLockerDlg::OnBnClickedButtonLocker(UINT nID)
 			AfxMessageBox(_T("암호 불일치, 교수님께 메세지를 보냈습니다"), MB_OK | MB_ICONWARNING);
 			CFailDlg failDlg;
 			failDlg.DoModal();
-			EndDialog(IDOK);
+			DestroyWindow();
 		}
 
 		m_editLockerInput.SetWindowText(_T(""));
@@ -173,12 +173,27 @@ void CLockerDlg::OnBnClickedButtonTakeTestpaper()
 {
 	//엔딩 출력 변수 활성화
 	AfxMessageBox(_T("시험지를 획득했다!"), MB_OK | MB_ICONINFORMATION);
-	m_bSuccess = true;
-	EndDialog(IDOK);
+	GetParent()->SendMessage(WM_USER + 1);
+	DestroyWindow();
 }
 
 void CLockerDlg::OnBnClickedButtonTakeGold()
 {
 	AfxMessageBox(_T("금괴가 사라지면 교수님이 눈치챌거야..."), MB_OK | MB_ICONWARNING);
 	m_btnTakeGold.ShowWindow(SW_HIDE);
+}
+
+void CLockerDlg::OnCancel()
+{
+	DestroyWindow();
+}
+
+void CLockerDlg::OnOK()
+{
+	DestroyWindow();
+}
+
+void CLockerDlg::PostNcDestroy()
+{
+	delete this;
 }

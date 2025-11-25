@@ -20,7 +20,9 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
-
+	virtual void OnCancel();
+	virtual void OnOK();
+	virtual void PostNcDestroy();
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnPaint();

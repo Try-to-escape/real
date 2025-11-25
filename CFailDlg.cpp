@@ -64,16 +64,22 @@ void CFailDlg::OnClickedRetryButton()
 	if (pMain && pMain != this) {
 		pMain->PostMessageW(WM_CLOSE);
 	}
-	EndDialog(IDOK);
 	CStartDlg startDlg;
 	startDlg.DoModal();
+	DestroyWindow();
 }
 
 void CFailDlg::OnClickedExitButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	// 종료 버튼 : F받기 누르면 프로그램 종료
-	::PostQuitMessage(0);
+	CWnd* pMain = AfxGetMainWnd();
+	if (pMain)
+		pMain->SendMessage(WM_CLOSE);
+
+	Sleep(50);
+
+	exit(0);
 }
 
 void CFailDlg::OnPaint()
@@ -86,4 +92,19 @@ void CFailDlg::OnPaint()
 		GetClientRect(rect);
 		m_bmpFailImage.Draw(dc, rect.left, rect.top, rect.Width(), rect.Height());
 	}
+}
+
+void CFailDlg::OnCancel()
+{
+	OnClickedExitButton();
+}
+
+void CFailDlg::OnOK()
+{
+	DestroyWindow();
+}
+
+void CFailDlg::PostNcDestroy()
+{
+	delete this;   
 }
