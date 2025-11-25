@@ -117,6 +117,7 @@ BOOL CEscapeDlg::OnInitDialog()
 	m_imgEnding[3].Load(L"res/image/EscapeEnding4.bmp");
 	m_imgEnding[4].Load(L"res/image/EscapeEnding5.bmp");
 	m_imgEnding[5].Load(L"res/image/EscapeEnding6.bmp");
+	m_imgProfessorComing.Load(L"res/image/EscapeMainPageAttack.bmp");
 
 	// 다이얼로그 크기 설정
 	int nWidth = 1026;
@@ -214,7 +215,7 @@ void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 		bookListDlg.DoModal();
 	}
 	else if (laptop.PtInRect(point)) {
-		MessageBox(L"노트북");
+		MessageBox(L"노트북이 잠겨있다...");
 	}
 	else if (light.PtInRect(point)) {
 		CLightDlg lightDlg;
@@ -306,8 +307,9 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		//2. 교수님이 지갑을 가지러 다시 오신 경우
 		if (m_prevSecond <= 120 && m_seconds > 120) {
 			m_prevSecond = m_seconds;
-			AfxMessageBox(_T("저벅저벅..."), MB_OK | MB_ICONWARNING);
-			AfxMessageBox(_T("'하하하 지갑을 놔두고 와버렸네~~'하는 소리가 복도에서 희미하게 들린다"), MB_OK | MB_ICONWARNING);
+			m_pCurrentImage = &m_imgProfessorComing;
+			Invalidate();
+			AfxMessageBox(_T("교수님이 5초안에 방으로 들어오실거같다"), MB_OK | MB_ICONWARNING);
 			//대화상자 확인 버튼 누른 시점으로부터 5초 계산
 			m_bHideTimer = TRUE;
 			m_nHideSecond = m_seconds;
