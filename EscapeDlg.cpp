@@ -6,11 +6,7 @@
 #include "Escape.h"
 #include "EscapeDlg.h"
 #include "afxdialogex.h"
-#include "CPictureDlg.h"
 #include "CFailDlg.h"
-#include "CBookListDlg.h"
-#include "CLightDlg.h"
-#include "CLockerDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -92,6 +88,10 @@ BOOL CEscapeDlg::OnInitDialog()
 	m_nHideSecond = 0;
 	m_bIsHiddenImage = FALSE;
 	m_nHiddenImageTimer = 0;
+	m_pBookListDlg = nullptr;
+	m_pLightDlg = nullptr;
+	m_pLockerDlg = nullptr;
+	m_pPictureDlg = nullptr;
 
 	//컨트롤 설정
 	m_btnEnd.ShowWindow(SW_HIDE);
@@ -208,6 +208,7 @@ HCURSOR CEscapeDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+//영역 클릭시 대화상자 
 void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	CRect bookList(0, 0, 448, 241);
@@ -217,69 +218,84 @@ void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	CRect frame(825, 26, 1001, 248);
 
 	if (bookList.PtInRect(point)) {
-		CBookListDlg* pBookListDlg = new CBookListDlg;
-		if (pBookListDlg->Create(IDD_DIALOG_BOOKLIST, this))
+		if (m_pBookListDlg == nullptr || !::IsWindow(m_pBookListDlg->m_hWnd))
 		{
-			pBookListDlg->ShowWindow(SW_SHOW);
+			m_pBookListDlg = new CBookListDlg;
+			if (m_pBookListDlg->Create(IDD_DIALOG_BOOKLIST, this))
+				m_pBookListDlg->ShowWindow(SW_SHOW);
+			else {
+				delete m_pBookListDlg;
+				m_pBookListDlg = nullptr;
+			}
 		}
-		else
-		{
-			delete pBookListDlg;
+		else {
+			m_pBookListDlg->SetForegroundWindow();
 		}
 	}
 	else if (laptop.PtInRect(point)) {
 		MessageBox(L"노트북이 잠겨있다...");
 	}
 	else if (light.PtInRect(point)) {
-		CLightDlg* pLightDlg = new CLightDlg;
-		if (pLightDlg->Create(IDD_DIALOG_LIGHT, this))
+		if (m_pLightDlg == nullptr || !::IsWindow(m_pLightDlg->m_hWnd))
 		{
-			pLightDlg->ShowWindow(SW_SHOW);
+			m_pLightDlg = new CLightDlg;
+			if (m_pLightDlg->Create(IDD_DIALOG_LIGHT, this))
+				m_pLightDlg->ShowWindow(SW_SHOW);
+			else {
+				delete m_pLightDlg;
+				m_pLightDlg = nullptr;
+			}
 		}
-		else
-		{
-			delete pLightDlg;
+		else {
+			m_pLightDlg->SetForegroundWindow();
 		}
 	}
 	else if (safe.PtInRect(point)) {
-		CLockerDlg* pLockerDlg = new CLockerDlg;
-		if (pLockerDlg->Create(IDD_DIALOG_LOCKER, this))
+		if (m_pLockerDlg == nullptr || !::IsWindow(m_pLockerDlg->m_hWnd))
 		{
-			pLockerDlg->ShowWindow(SW_SHOW);
+			m_pLockerDlg = new CLockerDlg;
+			if (m_pLockerDlg->Create(IDD_DIALOG_LOCKER, this))
+				m_pLockerDlg->ShowWindow(SW_SHOW);
+			else {
+				delete m_pLockerDlg;
+				m_pLockerDlg = nullptr;
+			}
 		}
-		else
-		{
-			delete pLockerDlg;
+		else {
+			m_pLockerDlg->SetForegroundWindow();
 		}
 	}
 
-		////엔딩
-		//if (lockerDlg.m_bSuccess)
-		//{
-		//	AfxMessageBox(_T("시험지를 획득했다! 이제 시험은 100점이다!"), MB_OK | MB_ICONINFORMATION);
-		//	//버튼들 숨기기
-		//	m_btnHide.ShowWindow(SW_HIDE);
-		//	m_btnOut.ShowWindow(SW_HIDE);
-		//	m_btnTimer.ShowWindow(SW_HIDE);
-		//	//엔딩 이미지 시작
-		//	m_nCurrentEndingIndex = 0;
-		//	m_pCurrentImage = &m_imgEnding[m_nCurrentEndingIndex];
-		//	Invalidate();
+	////엔딩
+	//if (lockerDlg.m_bSuccess)
+	//{
+	//	AfxMessageBox(_T("시험지를 획득했다! 이제 시험은 100점이다!"), MB_OK | MB_ICONINFORMATION);
+	//	//버튼들 숨기기
+	//	m_btnHide.ShowWindow(SW_HIDE);
+	//	m_btnOut.ShowWindow(SW_HIDE);
+	//	m_btnTimer.ShowWindow(SW_HIDE);
+	//	//엔딩 이미지 시작
+	//	m_nCurrentEndingIndex = 0;
+	//	m_pCurrentImage = &m_imgEnding[m_nCurrentEndingIndex];
+	//	Invalidate();
 
-		//	SetTimer(2, 5000, nullptr);
-		//}
+	//	SetTimer(2, 5000, nullptr);
+	//}
 	else if (frame.PtInRect(point)) {
-		CPictureDlg* pPictureDlg = new CPictureDlg;
-		if (pPictureDlg->Create(IDD_PICTURE_DIALOG, this))
+		if (m_pPictureDlg == nullptr || !::IsWindow(m_pPictureDlg->m_hWnd))
 		{
-			pPictureDlg->ShowWindow(SW_SHOW);
+			m_pPictureDlg = new CPictureDlg;
+			if (m_pPictureDlg->Create(IDD_PICTURE_DIALOG, this))
+				m_pPictureDlg->ShowWindow(SW_SHOW);
+			else {
+				delete m_pPictureDlg;
+				m_pPictureDlg = nullptr;
+			}
 		}
-		else
-		{
-			delete pPictureDlg;
+		else {
+			m_pPictureDlg->SetForegroundWindow();
 		}
 	}
-	CDialogEx::OnLButtonDown(nFlags, point);
 }
 
 void CEscapeDlg::OnBnClickedButtonHide()
@@ -355,7 +371,7 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		//2. 교수님이 지갑을 가지러 다시 오신 경우
 		if (m_prevSecond <= 120 && m_seconds > 120) {
 			m_prevSecond = m_seconds;
-			CloseAllModelessChildDialogs();
+			CloseAllDialogs();
 			m_pCurrentImage = &m_imgProfessorComing;
 			Invalidate();
 			AfxMessageBox(_T("교수님이 5초안에 방으로 들어오실거같다"), MB_OK | MB_ICONWARNING);
@@ -464,31 +480,34 @@ LRESULT CEscapeDlg::OnLockerSuccess(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-//자식모달리스창 제거 함수
-// CEscapeDlg의 모든 자식 모달리스 다이얼로그 닫기
-void CEscapeDlg::CloseAllModelessChildDialogs()
+//자식 다이얼로그 닫기
+
+
+
+
+void CEscapeDlg::CloseAllDialogs()
 {
-	EnumChildWindows(this->m_hWnd, [](HWND hWnd, LPARAM lParam) -> BOOL
-		{
-			// CWnd 포인터로 변환
-			CWnd* pWnd = CWnd::FromHandle(hWnd);
-			if (pWnd)
-			{
-				CString className;
-				::GetClassName(hWnd, className.GetBuffer(256), 256);
-				className.ReleaseBuffer();
+	if (m_pBookListDlg && ::IsWindow(m_pBookListDlg->m_hWnd))
+	{
+		m_pBookListDlg->DestroyWindow();
+		m_pBookListDlg = nullptr;
+	}
 
-				// 디버깅용 로그 (필요하면)
-				// TRACE(L"Child Class: %s\n", className);
+	if (m_pLightDlg && ::IsWindow(m_pLightDlg->m_hWnd))
+	{
+		m_pLightDlg->DestroyWindow();
+		m_pLightDlg = nullptr;
+	}
 
-				// 닫을 대상: 자식 다이얼로그만
-				if (pWnd->IsKindOf(RUNTIME_CLASS(CDialogEx)) && pWnd != CWnd::FromHandle(lParam))
-				{
-					// 강제로 창 닫기 (모달리스는 이 방법이 안전)
-					pWnd->SendMessage(WM_CLOSE);
-				}
-			}
-			return TRUE;
-		}, (LPARAM)this);
+	if (m_pLockerDlg && ::IsWindow(m_pLockerDlg->m_hWnd))
+	{
+		m_pLockerDlg->DestroyWindow();
+		m_pLockerDlg = nullptr;
+	}
+
+	if (m_pPictureDlg && ::IsWindow(m_pPictureDlg->m_hWnd))
+	{
+		m_pPictureDlg->DestroyWindow();
+		m_pPictureDlg = nullptr;
+	}
 }
-

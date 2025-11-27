@@ -3,7 +3,10 @@
 //
 
 #pragma once
-
+#include "CBookListDlg.h"
+#include "CLightDlg.h"
+#include "CLockerDlg.h"
+#include "CPictureDlg.h"
 
 // CEscapeDlg 대화 상자
 class CEscapeDlg : public CDialogEx
@@ -26,7 +29,6 @@ protected:
 
 	// 생성된 메시지 맵 함수
 	virtual BOOL OnInitDialog();
-	virtual void DoDataExchange(CDataExchange* pDX);
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
@@ -43,7 +45,6 @@ public:
 	afx_msg void OnBnClickedButtonOut();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnBnClickedButtonEnd();
-	void CloseAllModelessChildDialogs();
 	int m_seconds;
 	CFont m_fontTimer;
 
@@ -69,4 +70,11 @@ public:
 	CStatic m_btnTimer;
 	CButton m_btnEnd;
 	CImage m_imgProfessorComing;
+
+	//다이얼로그 변수 관리
+	CBookListDlg* m_pBookListDlg;
+	CLightDlg* m_pLightDlg;
+	CLockerDlg* m_pLockerDlg;
+	CPictureDlg* m_pPictureDlg;
+	void CloseAllDialogs();
 };
