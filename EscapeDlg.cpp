@@ -369,7 +369,7 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 
 		//2. 교수님이 지갑을 가지러 다시 오신 경우
-		if (m_prevSecond <= 120 && m_seconds > 120) {
+		if (m_prevSecond <= 5 && m_seconds > 5) {
 			m_prevSecond = m_seconds;
 			CloseAllDialogs();
 			m_pCurrentImage = &m_imgProfessorComing;
@@ -481,10 +481,6 @@ LRESULT CEscapeDlg::OnLockerSuccess(WPARAM wParam, LPARAM lParam)
 }
 
 //자식 다이얼로그 닫기
-
-
-
-
 void CEscapeDlg::CloseAllDialogs()
 {
 	if (m_pBookListDlg && ::IsWindow(m_pBookListDlg->m_hWnd))
