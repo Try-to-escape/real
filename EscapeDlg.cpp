@@ -267,22 +267,6 @@ void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 			m_pLockerDlg->SetForegroundWindow();
 		}
 	}
-
-	////엔딩
-	//if (lockerDlg.m_bSuccess)
-	//{
-	//	AfxMessageBox(_T("시험지를 획득했다! 이제 시험은 100점이다!"), MB_OK | MB_ICONINFORMATION);
-	//	//버튼들 숨기기
-	//	m_btnHide.ShowWindow(SW_HIDE);
-	//	m_btnOut.ShowWindow(SW_HIDE);
-	//	m_btnTimer.ShowWindow(SW_HIDE);
-	//	//엔딩 이미지 시작
-	//	m_nCurrentEndingIndex = 0;
-	//	m_pCurrentImage = &m_imgEnding[m_nCurrentEndingIndex];
-	//	Invalidate();
-
-	//	SetTimer(2, 5000, nullptr);
-	//}
 	else if (frame.PtInRect(point)) {
 		if (m_pPictureDlg == nullptr || !::IsWindow(m_pPictureDlg->m_hWnd))
 		{
