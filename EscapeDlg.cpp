@@ -116,6 +116,8 @@ BOOL CEscapeDlg::OnInitDialog()
 
 
 	//가람파트 이미지 불러오기
+	m_imgHide.Load(L"res/image/EscapeMainPageHide.bmp");
+	m_imgOut.Load(L"res/image/EscapeMainPage.bmp");
 	m_imgHint.Load(L"res/image/EscapeMainPageHint.bmp");
 	m_imgEnding[0].Load(L"res/image/EscapeEnding1.bmp");
 	m_imgEnding[1].Load(L"res/image/EscapeEnding2.bmp");
@@ -300,16 +302,9 @@ void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CEscapeDlg::OnBnClickedButtonHide()
 {
-	m_imgBg.Destroy();
 
-	if (FAILED(m_imgBg.Load(L"res/image/EscapeMainPageHide.bmp")))
-	{
-		AfxMessageBox(L"이미지 로드 실패!");
-		return;
-	}
-
-	Invalidate(TRUE);
-	UpdateWindow();
+	m_pCurrentImage = &m_imgHide;
+	Invalidate();
 
 	if (m_bHideTimer) {
 		m_bHideRequested = TRUE;
@@ -319,14 +314,8 @@ void CEscapeDlg::OnBnClickedButtonHide()
 void CEscapeDlg::OnBnClickedButtonOut()
 {
 	m_imgBg.Destroy();
-
-	if (FAILED(m_imgBg.Load(L"res/image/EscapeMainPage.bmp")))
-	{
-		AfxMessageBox(L"이미지 로드 실패!");
-		return;
-	}
-
-	Invalidate(TRUE);
+	m_pCurrentImage = &m_imgOut;
+	Invalidate();
 	UpdateWindow();
 
 	//교수님이 나가지 않았는데 나가기 버튼을 누른 경우
@@ -346,6 +335,7 @@ void CEscapeDlg::OnBnClickedButtonOut()
 	}
 }
 
+//타이머 + 교수님 등장
 void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	if (nIDEvent == 1)
@@ -371,6 +361,7 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		//2. 교수님이 지갑을 가지러 다시 오신 경우
 		if (m_prevSecond <= 5 && m_seconds > 5) {
 			m_prevSecond = m_seconds;
+			//다른 창을 모두 닫음
 			CloseAllDialogs();
 			m_pCurrentImage = &m_imgProfessorComing;
 			Invalidate();

@@ -77,4 +77,6 @@ public:
 	CLockerDlg* m_pLockerDlg;
 	CPictureDlg* m_pPictureDlg;
 	void CloseAllDialogs();
+	CImage m_imgHide;
+	CImage m_imgOut;
 };
