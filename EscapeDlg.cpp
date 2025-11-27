@@ -307,15 +307,9 @@ void CEscapeDlg::OnBnClickedButtonOut()
 		m_bHideTimer = FALSE;
 		m_bIsHiddenImage = FALSE;
 		AfxMessageBox(_T("교수님께 들켜버렸다!"), MB_OK | MB_ICONERROR);
-		CFailDlg* pFailDlg = new CFailDlg;
-		if (pFailDlg->Create(IDD_FAIL_DIALOG, this))
-		{
-			pFailDlg->ShowWindow(SW_SHOW);
-		}
-		else
-		{
-			delete pFailDlg;
-		}
+		CFailDlg failDlg;
+		failDlg.DoModal();
+		EndDialog(IDOK);
 	}
 }
 
@@ -331,19 +325,13 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		//1. 5분이 지난 경우 -> 자동 실패 엔딩
 		if (m_seconds > 300) {
 			AfxMessageBox(_T("교수님이 커피를 사고 돌아오셨다..."), MB_OK | MB_ICONWARNING);
-			CFailDlg* pFailDlg = new CFailDlg;
-			if (pFailDlg->Create(IDD_FAIL_DIALOG, this))
-			{
-				pFailDlg->ShowWindow(SW_SHOW);
-			}
-			else
-			{
-				delete pFailDlg;
-			}
+			CFailDlg failDlg;
+			failDlg.DoModal();
+			EndDialog(IDOK);
 		}
 
 		//2. 교수님이 지갑을 가지러 다시 오신 경우
-		if (m_prevSecond <= 5 && m_seconds > 5) {
+		if (m_prevSecond <= 120 && m_seconds > 120) {
 			m_prevSecond = m_seconds;
 			//다른 창을 모두 닫음
 			CloseAllDialogs();
@@ -373,15 +361,9 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 			//2) 5초안에 숨기 버튼을 안누름 -> 실패 엔딩
 			else {
 				AfxMessageBox(_T("교수님께 들켜버렸다!"), MB_OK | MB_ICONERROR);
-				CFailDlg* pFailDlg = new CFailDlg;
-				if (pFailDlg->Create(IDD_FAIL_DIALOG, this))
-				{
-					pFailDlg->ShowWindow(SW_SHOW);
-				}
-				else
-				{
-					delete pFailDlg;
-				}
+				CFailDlg failDlg;
+				failDlg.DoModal();
+				EndDialog(IDOK);
 			}
 		}
 
