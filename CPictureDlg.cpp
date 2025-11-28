@@ -103,6 +103,7 @@ void CPictureDlg::OnClickedButtonSubmit()
 	switch (m_selectedPictureRadio) {
 	case 1:
 		m_bmpPictureCurrent = &m_bmpPicture1;
+		m_btnSubmit.ShowWindow(SW_HIDE);
 		break;
 	case 2:
 		m_bmpPictureCurrent = &m_bmpPicture2;
