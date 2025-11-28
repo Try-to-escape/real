@@ -68,10 +68,9 @@ BOOL CPictureDlg::OnInitDialog()
 
 	//버튼 좌표 지정
 	m_btnSubmit.SetWindowPos(NULL, 370, 670, 277, 70, SWP_NOZORDER);
-	m_btnFail1.SetWindowPos(NULL, 150, 600, 30, 30, SWP_NOZORDER);
+	m_btnSuccess.SetWindowPos(NULL, 150, 600, 30, 30, SWP_NOZORDER);
 	m_btnFail2.SetWindowPos(NULL, 490, 600, 30, 30, SWP_NOZORDER);
-	m_btnSuccess.SetWindowPos(NULL, 830, 600, 30, 30, SWP_NOZORDER);
-
+	m_btnFail1.SetWindowPos(NULL, 830, 600, 30, 30, SWP_NOZORDER);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }
@@ -100,35 +99,24 @@ void CPictureDlg::OnClickedButtonSubmit()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	CFailDlg* pFailDlg = new CFailDlg;
+	CFailDlg failDlg;
 	switch (m_selectedPictureRadio) {
 	case 1:
 		m_bmpPictureCurrent = &m_bmpPicture1;
 		break;
 	case 2:
-		
 		m_bmpPictureCurrent = &m_bmpPicture2;
-		if (pFailDlg->Create(IDD_FAIL_DIALOG, this))
-		{
-			pFailDlg->ShowWindow(SW_SHOW);
-		}
-		else
-		{
-			delete pFailDlg;
-		}
+		failDlg.DoModal();
+		EndDialog(IDOK);
 		break;
 	case 3:
-		
 		m_bmpPictureCurrent = &m_bmpPicture3;
-		if (pFailDlg->Create(IDD_FAIL_DIALOG, this))
-		{
-			pFailDlg->ShowWindow(SW_SHOW);
-		}
-		else
-		{
-			delete pFailDlg;
-		}
-
+		failDlg.DoModal();
+		EndDialog(IDOK);
 		break;
+	default:
+		failDlg.DoModal();
+		EndDialog(IDOK);
 	}
 
 	Invalidate();
