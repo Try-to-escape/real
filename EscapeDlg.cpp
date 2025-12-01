@@ -371,7 +371,7 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		if (m_bIsHiddenImage && (m_seconds - m_nHiddenImageTimer >= 5))
 		{
 			m_bIsHiddenImage = FALSE;
-			m_pCurrentImage = &m_imgBg;
+			m_pCurrentImage = &m_imgOut;
 			Invalidate(TRUE);
 			AfxMessageBox(_T("교수님이 다시 나가셨다...계속 방을 둘러보자"), MB_OK | MB_ICONINFORMATION);
 		}
