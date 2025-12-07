@@ -223,6 +223,7 @@ void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	CRect light(443, 261, 557, 487);
 	CRect safe(337, 655, 517, 746);
 	CRect frame(825, 26, 1001, 248);
+	CRect door(535, 0, 730, 292);
 
 	if (bookList.PtInRect(point)) {
 		if (m_pBookListDlg == nullptr || !::IsWindow(m_pBookListDlg->m_hWnd))
@@ -241,6 +242,9 @@ void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 	else if (laptop.PtInRect(point)) {
 		MessageBox(L"노트북이 잠겨있다...");
+	}
+	else if (door.PtInRect(point)) {
+		MessageBox(L"시험지를 찾기 전엔 나갈 수 없어!");
 	}
 	else if (light.PtInRect(point)) {
 		if (m_pLightDlg == nullptr || !::IsWindow(m_pLightDlg->m_hWnd))
