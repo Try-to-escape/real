@@ -79,4 +79,5 @@ public:
 	void CloseAllDialogs();
 	CImage m_imgHide;
 	CImage m_imgOut;
+	bool IsOtherModelessOpen();
 };

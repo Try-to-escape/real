@@ -213,6 +213,9 @@ HCURSOR CEscapeDlg::OnQueryDragIcon()
 //영역 클릭시 대화상자 
 void CEscapeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
+	if (IsOtherModelessOpen())
+		return;
+
 	CRect bookList(0, 0, 448, 241);
 	CRect laptop(60, 302, 339, 479);
 	CRect light(443, 261, 557, 487);
@@ -463,4 +466,12 @@ void CEscapeDlg::CloseAllDialogs()
 		m_pPictureDlg->DestroyWindow();
 		m_pPictureDlg = nullptr;
 	}
+}
+
+bool CEscapeDlg::IsOtherModelessOpen()
+{
+	return (m_pBookListDlg && ::IsWindow(m_pBookListDlg->m_hWnd)) ||
+		(m_pLightDlg && ::IsWindow(m_pLightDlg->m_hWnd)) ||
+		(m_pLockerDlg && ::IsWindow(m_pLockerDlg->m_hWnd)) ||
+		(m_pPictureDlg && ::IsWindow(m_pPictureDlg->m_hWnd));
 }
