@@ -73,6 +73,7 @@ BEGIN_MESSAGE_MAP(CEscapeDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_END, &CEscapeDlg::OnBnClickedButtonEnd)
 	ON_MESSAGE(WM_USER + 1, &CEscapeDlg::OnLockerSuccess)
 	ON_MESSAGE(WM_USER + 100, &CEscapeDlg::OnFailDlgEvent)
+	ON_MESSAGE(WM_USER + 101, &CEscapeDlg::OnProfessorWarning)
 END_MESSAGE_MAP()
 
 
@@ -298,10 +299,7 @@ void CEscapeDlg::OnBnClickedButtonHide()
 
 	m_pCurrentImage = &m_imgHide;
 	Invalidate();
-
-	if (m_bHideTimer) {
-		m_bHideRequested = TRUE;
-	}
+	m_bHideRequested = TRUE;
 }
 
 void CEscapeDlg::OnBnClickedButtonOut()
@@ -309,6 +307,7 @@ void CEscapeDlg::OnBnClickedButtonOut()
 	m_pCurrentImage = &m_imgOut;
 	Invalidate();
 	UpdateWindow();
+	m_bHideRequested = FALSE;
 
 	//교수님이 나가지 않았는데 나가기 버튼을 누른 경우
 	if (m_bHideTimer || m_bIsHiddenImage ) {
@@ -341,14 +340,16 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 
 		//2. 교수님이 지갑을 가지러 다시 오신 경우
-		if (m_prevSecond <= 120 && m_seconds > 120) {
+		if (m_prevSecond <= 10 && m_seconds > 10) {
 			m_prevSecond = m_seconds;
 			//다른 창을 모두 닫음
 			CloseAllDialogs();
 			m_pCurrentImage = &m_imgProfessorComing;
 			Invalidate();
-			AfxMessageBox(_T("교수님이 5초안에 방으로 들어오실거같다"), MB_OK | MB_ICONWARNING);
-			//대화상자 확인 버튼 누른 시점으로부터 5초 계산
+
+			PostMessage(WM_USER + 101);
+
+			//메세지 박스 생성 시점으로부터 5초 계산
 			m_bHideTimer = TRUE;	//교수님 알림 온 후 타이머 시작
 			m_nHideSecond = m_seconds;	
 		}
@@ -492,7 +493,7 @@ LRESULT CEscapeDlg::OnFailDlgEvent(WPARAM wParam, LPARAM lParam)
 {
 	CloseAllDialogs();
 	// FailDlg 띄우기
-	AfxMessageBox(_T("교수님이 경보 알림을 받고 오셨다!"), MB_OK | MB_ICONERROR);
+	AfxMessageBox(_T("잘못된 정답을 고른거같다.. 교수님이 오셨다.."), MB_OK | MB_ICONERROR);
 	CFailDlg failDlg;
 	failDlg.DoModal();
 
@@ -500,4 +501,11 @@ LRESULT CEscapeDlg::OnFailDlgEvent(WPARAM wParam, LPARAM lParam)
 	EndDialog(IDOK);
 
 	return 0;
+}
+
+//교수님 등장 알림상자
+LRESULT CEscapeDlg::OnProfessorWarning(WPARAM wParam, LPARAM lParam)
+{
+    MessageBox(L"교수님이 5초안에 방으로 들어오실거같다", L"복도에서 들리는 발소리", MB_OK | MB_ICONWARNING);
+    return 0;
 }

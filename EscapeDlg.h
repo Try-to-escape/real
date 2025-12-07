@@ -34,6 +34,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg LRESULT OnLockerSuccess(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnFailDlgEvent(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnProfessorWarning(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 
 	CImage m_imgBg;
@@ -80,4 +81,5 @@ public:
 	CImage m_imgHide;
 	CImage m_imgOut;
 	bool IsOtherModelessOpen();
+	bool m_bTimerPaused;
 };
