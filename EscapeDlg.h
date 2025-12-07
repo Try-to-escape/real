@@ -33,7 +33,7 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg LRESULT OnLockerSuccess(WPARAM wParam, LPARAM lParam);
-
+	afx_msg LRESULT OnFailDlgEvent(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 
 	CImage m_imgBg;

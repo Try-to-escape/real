@@ -127,6 +127,7 @@ void CLockerDlg::OnLockerButton()
 	OnBnClickedButtonLocker(nID);          
 }
 
+//금고버튼 클릭 함수
 void CLockerDlg::OnBnClickedButtonLocker(UINT nID)
 {
 
@@ -171,8 +172,7 @@ void CLockerDlg::OnBnClickedButtonLocker(UINT nID)
 		//2. 비밀번호 불일치시->실패화면(경고 메세지, 창 닫기)
 		else {
 			AfxMessageBox(_T("암호 불일치, 교수님께 메세지를 보냈습니다"), MB_OK | MB_ICONWARNING);
-			CFailDlg failDlg;
-			failDlg.DoModal();
+			GetParent()->SendMessage(WM_USER + 100);	//CEscpaeDlg에 실패 이벤트 전달
 			DestroyWindow();
 		}
 
@@ -182,15 +182,16 @@ void CLockerDlg::OnBnClickedButtonLocker(UINT nID)
 
 	}
 }
-
+//시험지 획득-> 성공 화면
 void CLockerDlg::OnBnClickedButtonTakeTestpaper()
 {
 	//엔딩 출력 변수 활성화
 	AfxMessageBox(_T("시험지를 획득했다!"), MB_OK | MB_ICONINFORMATION);
-	GetParent()->SendMessage(WM_USER + 1);
+	GetParent()->SendMessage(WM_USER + 1);	//CEscpaeDlg에 엔딩 이벤트 전달
 	DestroyWindow();
 }
 
+//금괴 가져가기 버튼
 void CLockerDlg::OnBnClickedButtonTakeGold()
 {
 	AfxMessageBox(_T("금괴가 사라지면 교수님이 눈치챌거야..."), MB_OK | MB_ICONWARNING);

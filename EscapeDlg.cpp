@@ -72,7 +72,9 @@ BEGIN_MESSAGE_MAP(CEscapeDlg, CDialogEx)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_BUTTON_END, &CEscapeDlg::OnBnClickedButtonEnd)
 	ON_MESSAGE(WM_USER + 1, &CEscapeDlg::OnLockerSuccess)
+	ON_MESSAGE(WM_USER + 100, &CEscapeDlg::OnFailDlgEvent)
 END_MESSAGE_MAP()
+
 
 
 
@@ -300,7 +302,6 @@ void CEscapeDlg::OnBnClickedButtonHide()
 
 void CEscapeDlg::OnBnClickedButtonOut()
 {
-	m_imgBg.Destroy();
 	m_pCurrentImage = &m_imgOut;
 	Invalidate();
 	UpdateWindow();
@@ -309,6 +310,7 @@ void CEscapeDlg::OnBnClickedButtonOut()
 	if (m_bHideTimer || m_bIsHiddenImage ) {
 		m_bHideTimer = FALSE;
 		m_bIsHiddenImage = FALSE;
+		CloseAllDialogs();
 		AfxMessageBox(_T("교수님께 들켜버렸다!"), MB_OK | MB_ICONERROR);
 		CFailDlg failDlg;
 		failDlg.DoModal();
@@ -328,6 +330,7 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		//1. 5분이 지난 경우 -> 자동 실패 엔딩
 		if (m_seconds > 300) {
 			AfxMessageBox(_T("교수님이 커피를 사고 돌아오셨다..."), MB_OK | MB_ICONWARNING);
+			CloseAllDialogs();
 			CFailDlg failDlg;
 			failDlg.DoModal();
 			EndDialog(IDOK);
@@ -342,28 +345,28 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 			Invalidate();
 			AfxMessageBox(_T("교수님이 5초안에 방으로 들어오실거같다"), MB_OK | MB_ICONWARNING);
 			//대화상자 확인 버튼 누른 시점으로부터 5초 계산
-			m_bHideTimer = TRUE;
-			m_nHideSecond = m_seconds;
+			m_bHideTimer = TRUE;	//교수님 알림 온 후 타이머 시작
+			m_nHideSecond = m_seconds;	
 		}
 
 		//3. 교수님이 오신 후 5초가 지남
 		if (m_bHideTimer && (m_seconds - m_nHideSecond >= 5))
 		{
-			
 			m_bHideTimer = FALSE;
 			//1) 5초안에 숨기 버튼을 누름-> 힌트 이미지
 			if (m_bHideRequested)
 			{
 				m_bHideRequested = FALSE;
 				m_bIsHiddenImage = TRUE;
-				m_nHiddenImageTimer = m_seconds;
 				m_pCurrentImage = &m_imgHint;
 				Invalidate();
+				m_nHiddenImageTimer = m_seconds;	//교수님 등장 이미지로 변경 후 타이머 시작(5초)
 
 			}
 			//2) 5초안에 숨기 버튼을 안누름 -> 실패 엔딩
 			else {
 				AfxMessageBox(_T("교수님께 들켜버렸다!"), MB_OK | MB_ICONERROR);
+				CloseAllDialogs();
 				CFailDlg failDlg;
 				failDlg.DoModal();
 				EndDialog(IDOK);
@@ -375,7 +378,7 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 		{
 			m_bIsHiddenImage = FALSE;
 			m_pCurrentImage = &m_imgOut;
-			Invalidate(TRUE);
+			Invalidate();
 			AfxMessageBox(_T("교수님이 다시 나가셨다...계속 방을 둘러보자"), MB_OK | MB_ICONINFORMATION);
 		}
 
@@ -384,6 +387,7 @@ void CEscapeDlg::OnTimer(UINT_PTR nIDEvent)
 
 		SetDlgItemText(IDC_STATIC_TIMER, text);
 	}
+	//엔딩 이미지 시퀀스 타이머(5초마다 이미지 변화)
 	else if (nIDEvent == 2)
 	{
 		KillTimer(1);
@@ -430,9 +434,11 @@ LRESULT CEscapeDlg::OnLockerSuccess(WPARAM wParam, LPARAM lParam)
 {
 	// 엔딩 시작
 	AfxMessageBox(_T("시험지를 획득했다! 이제 시험은 100점이다!"));
+	//컨트롤 제거
 	m_btnHide.ShowWindow(SW_HIDE);
 	m_btnOut.ShowWindow(SW_HIDE);
 	m_btnTimer.ShowWindow(SW_HIDE);
+	//이미지 변경
 	m_nCurrentEndingIndex = 0;
 	m_pCurrentImage = &m_imgEnding[m_nCurrentEndingIndex];
 	Invalidate();
@@ -440,7 +446,7 @@ LRESULT CEscapeDlg::OnLockerSuccess(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-//자식 다이얼로그 닫기
+//모든 자식 모달리스 대화상자 닫기 함수
 void CEscapeDlg::CloseAllDialogs()
 {
 	if (m_pBookListDlg && ::IsWindow(m_pBookListDlg->m_hWnd))
@@ -468,10 +474,26 @@ void CEscapeDlg::CloseAllDialogs()
 	}
 }
 
+//다른 모달리스 대화상자가 활성화 여부 확인 함수
 bool CEscapeDlg::IsOtherModelessOpen()
 {
 	return (m_pBookListDlg && ::IsWindow(m_pBookListDlg->m_hWnd)) ||
 		(m_pLightDlg && ::IsWindow(m_pLightDlg->m_hWnd)) ||
 		(m_pLockerDlg && ::IsWindow(m_pLockerDlg->m_hWnd)) ||
 		(m_pPictureDlg && ::IsWindow(m_pPictureDlg->m_hWnd));
+}
+
+//자식 모달리스에서 실패창 이벤트 호출 함수
+LRESULT CEscapeDlg::OnFailDlgEvent(WPARAM wParam, LPARAM lParam)
+{
+	CloseAllDialogs();
+	// FailDlg 띄우기
+	AfxMessageBox(_T("교수님이 경보 알림을 받고 오셨다!"), MB_OK | MB_ICONERROR);
+	CFailDlg failDlg;
+	failDlg.DoModal();
+
+	// 게임 종료
+	EndDialog(IDOK);
+
+	return 0;
 }

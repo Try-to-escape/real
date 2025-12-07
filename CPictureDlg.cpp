@@ -5,7 +5,6 @@
 #include "Escape.h"
 #include "afxdialogex.h"
 #include "CPictureDlg.h"
-#include "CFailDlg.h"
 #include "resource.h"
 
 // CPictureDlg 대화 상자
@@ -98,8 +97,7 @@ void CPictureDlg::OnClickedRadioFail2()
 void CPictureDlg::OnClickedButtonSubmit()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	CFailDlg* pFailDlg = new CFailDlg;
-	CFailDlg failDlg;
+
 	switch (m_selectedPictureRadio) {
 	case 1:
 		m_bmpPictureCurrent = &m_bmpPicture1;
@@ -107,17 +105,16 @@ void CPictureDlg::OnClickedButtonSubmit()
 		break;
 	case 2:
 		m_bmpPictureCurrent = &m_bmpPicture2;
-		failDlg.DoModal();
-		EndDialog(IDOK);
+		GetParent()->SendMessage(WM_USER + 100);	//CEscpaeDlg에 실패 이벤트 전달
+		DestroyWindow();
 		break;
 	case 3:
 		m_bmpPictureCurrent = &m_bmpPicture3;
-		failDlg.DoModal();
-		EndDialog(IDOK);
+		GetParent()->SendMessage(WM_USER + 100);	//CEscpaeDlg에 실패 이벤트 전달
+		DestroyWindow();
 		break;
 	default:
-		failDlg.DoModal();
-		EndDialog(IDOK);
+		AfxMessageBox(_T("뒤집을 액자를 선택해보자"), MB_OK | MB_ICONERROR);
 	}
 
 	Invalidate();
