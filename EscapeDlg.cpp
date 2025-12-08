@@ -491,6 +491,7 @@ bool CEscapeDlg::IsOtherModelessOpen()
 //자식 모달리스에서 실패창 이벤트 호출 함수
 LRESULT CEscapeDlg::OnFailDlgEvent(WPARAM wParam, LPARAM lParam)
 {
+	KillTimer(1);
 	CloseAllDialogs();
 	// FailDlg 띄우기
 	AfxMessageBox(_T("잘못된 정답을 고른거같다.. 교수님이 오셨다.."), MB_OK | MB_ICONERROR);
